@@ -1,0 +1,85 @@
+@clc_bck:#f1f1f1;
+@clc_blue:#1890ff;
+@clc_border:#eee;
+@clc_grey:#bbb;
+html{
+  font-size: 62.5%;
+}
+.Calender{
+  width: 100%;
+  height: calc(100vh - 80px);
+  .ant-picker-calendar-header{
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    .ant-radio-group{
+      display: none;
+    }
+    .ant-picker-calendar-year-select{
+      max-width: 10rem;
+      margin-left: 12rem;
+      padding: 0;
+    }
+    .ant-picker-calendar-month-select{
+      max-width: 10rem;
+      margin: 0;
+      padding: 0;
+    }
+  }
+.ant-picker-calendar-date-content{
+  width: 100%;
+  
+}
+  .u-img{
+    width: 80%;
+    height: 100%;
+    max-width: 6rem;
+    max-height: 5rem;
+    text-align: center;
+    background-color: #e6f7ff;
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover{
+      
+      border: 1px solid @clc_blue;
+    }
+    &>img{
+      width: 60%;
+    }
+  }
+}
+table {
+  // 月历表的外框
+  border-style: hidden;
+  box-shadow: 0 0 0 1px @clc_border;
+  
+  //月历表的分割线
+  thead {
+    border-bottom: 1px solid @clc_border;
+
+    &>tr{height: 32px;
+    }
+   
+  }
+  td + td {border-left: 1px solid @clc_border;}
+  tr + tr {border-top: 1px solid @clc_border;}
+
+}
+.ant-picker-body{
+  padding: 0 !important;
+}
+.ant-picker-calendar-full .ant-picker-panel{
+  .ant-picker-calendar-date-content{
+    //height: 65px ;
+    height: calc((100vh - 330px) / 6);
+  }
+  .ant-picker-calendar-date{
+    border: 0;
+    margin: 0;
+  }
+}
+
+
