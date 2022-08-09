@@ -1,30 +1,49 @@
-import { DownOutlined ,UserOutlined} from '@ant-design/icons';
-import { Dropdown, Menu, Space } from 'antd';
+import { DownOutlined ,UserOutlined,ExclamationCircleOutlined} from '@ant-design/icons';
+import { Dropdown, Menu, Space ,Modal} from 'antd';
 import React from 'react';
-import { Link } from 'umi';
+import { Link ,useHistory} from 'umi';
 import './index.less';
-const menu = (
-  <Menu
-    items={[
-      {
-        label: <Link to={"/Login"}>登录</Link>,
-        key: '0',
-      },
-      {
-        type: 'divider',
-      },
-      {
-        label: <Link to={"/?flag=false"}>退出</Link>,
-        key: '1',
-      },
- 
- 
-    ]}
-  />
-);
+//<Link to={"/?flag=false"}>退出</Link>,
 
-const Logo = () => (
-  <Dropdown overlay={menu} trigger={['click']} className='m-logo'>
+const {confirm} = Modal;
+
+
+const Logo = () => {
+  const history = useHistory();
+  const showConfirm=()=>{
+    confirm({
+      title:'确认退出登录吗？',
+      icon:<ExclamationCircleOutlined></ExclamationCircleOutlined> ,
+      content:"",
+      onOk(){
+          history.push('/?flag=false');
+      },
+      onCancel(){
+        console.log('Cancel');
+      }
+    })
+  }
+  const menu = (
+    <Menu
+      items={[
+        {
+          label: <Link to={"/Login"}>登录</Link>,
+          key: '0',
+        },
+        {
+          type: 'divider',
+        },
+        {
+          label: <div onClick={showConfirm}>退出</div>,
+          key: '1',
+        },
+   
+   
+      ]}
+    />
+  );
+  return(
+    <Dropdown overlay={menu} trigger={['click']} className='m-logo'>
     <a onClick={(e) => e.preventDefault()}>
       <Space>
         <UserOutlined />
@@ -32,6 +51,8 @@ const Logo = () => (
       </Space>
     </a>
   </Dropdown>
-);
+  )
+ 
+};
 
 export default Logo;

@@ -3,7 +3,7 @@ import { UserOutlined,LockOutlined} from '@ant-design/icons';
 import './index.less'
 import { useHistory } from 'umi';
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState,useEffect ,useRef} from 'react';
 import axios  from 'axios';
 
 
@@ -18,7 +18,7 @@ const Login =()=>{
     const [id,setId] = useState();
     const[password,setPassword] = useState();
     const[data,setData] = useState();
-    const [flag,setFlag] = useState(false);
+    const flag = useRef(false);
 
     const change1 = (event)=>{
         let d = event.target.value;
@@ -38,12 +38,15 @@ const Login =()=>{
     const login =()=>{
             data.forEach((val,i)=>{
             if(val.u_id == id && val.password == password){
-                setFlag(true);
-                    console.log(flag);
+                flag.current = true;
+                console.log(flag.current);
                 message.success("登录成功");
-                setTimeout(()=>history.push('/?flag=true'),1000);
+                setTimeout(()=>history.push('/?flag=true'),500);
             }
         });
+        if(flag.current == false){
+            message.error("工号或者密码错误");
+        }
     }
     return(  <div className='m-login'>
             <div>

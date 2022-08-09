@@ -1,10 +1,11 @@
 import Head from "../../components/Head";
 import'./index.less';
 import React from 'react';
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import Item from '../../components/Item';
 import axios from "axios";
 import Rr from '../../components/Rr';
+
 
 
 /*const Countna_money = (nm_money,p_limit) => {
@@ -15,17 +16,24 @@ import Rr from '../../components/Rr';
 
 const AppointInfo = (props) =>{
   const c_id = props.location.query.c_id;
-  const [newArr ,setnewArr] = useState([]);
-  const [Arr,setArr] = useState([])
+  const [newArr ,setnewArr] = useState(
+    [{
+      c_id: '',
+      c_name: '',
+      time: '',
+      place: '',
+      nm_money: '0.00',
+      p_limit: 0,
+      duration:0,
+    }]
+  );
   const [user, setUser] = useState([]);
   useEffect(()=>{
     axios.get('http://124.220.20.66:8000/api/user/course').then((response)=>{
-    const Arr = response.data.filter((item,index)=>{
+    const Arrr = response.data.filter((item,index)=>{
             return item.c_id == c_id;
     })  
-    setArr(response.data);
-    setnewArr(Arr);
-  
+    setnewArr(Arrr);
   })
   },[]);
 
@@ -65,8 +73,8 @@ const AppointInfo = (props) =>{
                     <div><span>{item.money}</span></div>
                     <div><Switch defaultChecked = {0} onChange={(e)=>onChange(e,i)} /></div>
                 </div>*/
-                  <Item key={i} name={item.u_name} time={item.appo_time} money={(Number(newArr[0].nm_money) / (user.length> 5 ? user.length: 5)).toFixed(2)} 
-                  c_time={newArr[0].time} duration={newArr[0].duration} c_id={c_id} c_id2={item.c_id}></Item>
+                  <Item key={i} name={item.u_name} time={item.appo_time}  l={user.length} newArr={newArr}
+                   c_id={c_id} c_id2={item.c_id} u_id={item.u_id} ></Item>
               ))
             }
           </div>
