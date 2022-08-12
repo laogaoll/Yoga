@@ -91,7 +91,7 @@ const addCourse = () =>{
     
     <>
       <div className="g-index">
-      <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />} className={login==="true"?(flag?" u-button":'cannotadd'):'bt'}>
+      <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />} className={login==="1"?(flag?" u-button":'cannotadd'):'bt'}>
         添加课程
       </Button>
       <Drawer

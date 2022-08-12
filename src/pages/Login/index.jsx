@@ -5,10 +5,7 @@ import { useHistory } from 'umi';
 import React from 'react';
 import { useState,useEffect ,useRef} from 'react';
 import axios  from 'axios';
-
-
-
-
+import moment from 'moment';
 
 const reback =()=>{
     history.go(-1);
@@ -35,13 +32,21 @@ const Login =()=>{
             setData(response.data);
         })
 },[]);
+   
     const login =()=>{
             data.forEach((val,i)=>{
-            if(val.u_id == id && val.password == password){
+            if(val.u_id == id && val.password == password ){
                 flag.current = true;
-                console.log(flag.current);
                 message.success("登录成功");
-                setTimeout(()=>history.push('/?flag=true'),500);
+                localStorage.setItem('u_id',id);
+                localStorage.setItem('u_name',val.u_name);
+                localStorage.setItem('time', moment().format('YYYY-MM-DD HH:mm'));
+                if(val.u_type == 1){
+                    setTimeout(()=>history.push(`/?flag=1&u_id=${id}`),500);
+                }else if(val.u_type == 0){
+                    setTimeout(()=>history.push(`/?flag=2&u_id=${id}`),500);
+                }
+                
             }
         });
         if(flag.current == false){

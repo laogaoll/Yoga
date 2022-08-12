@@ -36,15 +36,15 @@ const AppointInfo = (props) =>{
     setnewArr(Arrr);
   })
   },[]);
-
   useEffect(()=>{
-    axios.get('http://124.220.20.66:8000/api/user/signup').then((response)=>{
-    
-    setUser(response.data);
-
-  })
+    axios.get('http://124.220.20.66:8000/api/user/signumber',{
+      params:{
+        c_id:c_id,
+      }
+    }).then((response)=>{
+          setUser(response.data);
+    })
   },[])
-
   const returnBefore = () =>{
     history.go(-1);
   }
@@ -62,7 +62,7 @@ const AppointInfo = (props) =>{
                 <div><span>学员</span></div>
                 <div><span>时间</span></div>
                 <div><span>学费</span></div>
-                <div><span>黑名单</span></div>
+                <div><span>未上课</span></div>
           </div>
           <div className="m-bd">
             {
@@ -74,7 +74,7 @@ const AppointInfo = (props) =>{
                     <div><Switch defaultChecked = {0} onChange={(e)=>onChange(e,i)} /></div>
                 </div>*/
                   <Item key={i} name={item.u_name} time={item.appo_time}  l={user.length} newArr={newArr}
-                   c_id={c_id} c_id2={item.c_id} u_id={item.u_id} ></Item>
+                   c_id={c_id} c_id2={item.c_id} u_id={item.u_id} s={0}></Item>
               ))
             }
           </div>

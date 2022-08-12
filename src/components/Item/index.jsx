@@ -11,6 +11,7 @@ const timeChange = (time)=>{
  }
 
 const Item =(props)=>{
+    const s = props.s;
     const name = props.name;
     const u_id = props.u_id;
     const time = timeChange(props.time).split(' ')[0];
@@ -31,7 +32,7 @@ const Item =(props)=>{
     useEffect(()=>{
         axios.get('http://124.220.20.66:8000/api/user/blacklist').then((response)=>{
             response.data.forEach((item,i) => {
-                if(u_id == item.u_id){
+                if(u_id == item.u_id && c_id == item.c_id){
                     setblackList(!blackList);
                 }
             });
@@ -60,15 +61,14 @@ const Item =(props)=>{
       
    };
     return(
-        c_id==c_id2?(
         <div className={time.split(' ')[0] ===c_time.split(' ')[0]? "color":(blackList?"c":"")}>
             <div>{name}</div>
             <div>{time}</div>
             <div>{money}</div>
             <div>
-            <Switch disabled={dis||blackList} checked={blackList} onChange={showConfirm}></Switch>
+            {s==1?<Switch disabled={true}></Switch>:<Switch disabled={dis||blackList} checked={blackList} onChange={showConfirm}></Switch>}
             </div>
-        </div>):null
+        </div>
     );
 }
 export default Item;

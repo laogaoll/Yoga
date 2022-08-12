@@ -1,5 +1,7 @@
 import lessStyles from './index.less';
 import yogaImg from '../../images/yoga.svg';
+import yumaoImg from '../../images/yumaoqiu.jpg';
+import weiqiImg from '../../images/weiqi.svg';
 import moment from 'moment';
 
 const timeChange = (time)=>{

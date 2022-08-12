@@ -1,5 +1,7 @@
 import './index.less';
 import yogaImg from "../images/yoga.svg";
+import weiqiImg from "../images/weiqi.svg";
+import yumaoqiuImg from "../images/yumaoqiu.jpg";
 import Head from '../components/Head';
 import Drawer from '../components/Drawer';
 import Logo from '../components/Logo';
@@ -13,7 +15,6 @@ import { Link } from 'umi';
     let newtime = moment(time).utcOffset(8).format('YYYY-MM-DD HH:mm:ss');
     return newtime;
  }
-
 const IndexPage = (props:any) => {
   const [data2,setdata2] = useState([]);
   const[day,setday] = useState(String);
@@ -32,6 +33,19 @@ const IndexPage = (props:any) => {
    ]) ;
    const count = useRef(0);
    const login = props.location.query.flag;
+   const id = props.location.query.u_id;
+
+   const [isblack,setB] = useState(false);
+   if (
+    moment().diff(
+      moment(localStorage.getItem('time'), 'YYYY-MM-DD HH:mm'),
+      'minutes',
+    ) > 30
+  ) {
+    localStorage.removeItem('u_id');
+    localStorage.removeItem('u_name');
+    localStorage.removeItem('time');
+  }
 useEffect(()=>{
   axios.get('http://124.220.20.66:8000/api/user/course').then((response)=>{
     //console.log(response.data);
@@ -43,6 +57,18 @@ useEffect(()=>{
       setA(response.data);
   })
 },[]);
+useEffect(()=>{
+  axios.get('http://124.220.20.66:8000/api/user/isblacklist',{
+      params:{
+          u_id:id,
+      }
+  }).then((response)=>{
+      console.log(response.data.length);
+      if(response.data.length >= 2){
+        setB(true);
+      }
+  })
+},[id]);
 const num =(m: any)=>{
   count.current = 0;
   a.forEach((item,i)=>{
@@ -50,14 +76,14 @@ const num =(m: any)=>{
       count.current++;
     }
   })
-  console.log(count.current)
   return count.current;
 }
   const dataCellRender = (value: Moment) =>{
     return ( data2.map((item: any,i: any)=>(
         value.format('YYYY-MM-DD') === timeChange(item.time).split(" ")[0]?(
-          <Link className='u-img' key={i} to={`/AppointInfo?c_id=${item.c_id}`}>
-          {item.c_name==='瑜伽'?<img src={yogaImg}></img>:""}{num(item.c_id)}
+          <Link className='u-img' key={i} to={login==1?`/AppointInfo?c_id=${item.c_id}`:(login==2?`/Appoint?c_id=${item.c_id}&isblack=${isblack}&u_id=${id}`:'/login')}>
+          {item.c_name==='瑜伽'?<img src={yogaImg}></img>:(item.c_name==='围棋'?<img src={weiqiImg}></img>:(
+            item.c_name==="羽毛球"?<img src={yumaoqiuImg}></img>:""))}{num(item.c_id)}
       </Link>
         ):null
     )))
@@ -81,7 +107,7 @@ const num =(m: any)=>{
       <div>
         <Head data={data2} flag={0}></Head>
         <div className='Calender'>
-          <Logo></Logo>
+          <Logo login = {login}></Logo>
           <Drawer flag = {buFlag} date={day} setIsAdd={setIsAdd} login={login}></Drawer>
           <Calendar dateCellRender={dataCellRender} onChange = {onChange}></Calendar>
         </div>
