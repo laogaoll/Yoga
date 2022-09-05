@@ -4,9 +4,7 @@ import './index.less'
 import { useHistory } from 'umi';
 import React from 'react';
 import { useState,useEffect ,useRef} from 'react';
-import axios  from 'axios';
-import moment from 'moment';
-
+let module =  import ('@/services/api');
 const reback =()=>{
     history.go(-1);
 }
@@ -27,7 +25,28 @@ const Login =()=>{
         setPassword(p);
     }
     const history = useHistory();
-    useEffect(()=>{
+    const login = async()=>{
+        (await module).LoginApi({
+            params:{
+                u_id:id,
+                password:password,
+            }
+        }).then((res)=>{
+            console.log(res);
+            if(res.status == 1){
+                message.success("登录成功");
+                setTimeout(()=>history.push(`/?flag=1&u_id=${id}`),500);
+            }else if(res.status == 0){
+                message.success("登录成功");
+                setTimeout(()=>history.push(`/?flag=2&u_id=${id}`),500);
+            }else{
+                message.error("工号或者密码错误");
+            }
+        }).catch((err)=>{
+            console.log(err);
+        })
+    }
+  /*  useEffect(()=>{
         axios.get('http://124.220.20.66:8000/api/user/users').then((response)=>{
             setData(response.data);
         })
@@ -52,7 +71,7 @@ const Login =()=>{
         if(flag.current == false){
             message.error("工号或者密码错误");
         }
-    }
+    }*/
     return(  <div className='m-login'>
             <div>
 

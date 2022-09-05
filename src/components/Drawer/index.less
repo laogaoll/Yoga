@@ -1,6 +1,9 @@
+html{
+  font-size: 62.5%;
+}
 .g-index{
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 80px - 1rem);
   position: absolute;
 }
 .bt{
@@ -9,6 +12,7 @@
 .u-button{
   position: absolute;
   left: 40px;
+  //top: -10px;
   background-color: #1890ff;
   
   border: none;
@@ -141,13 +145,22 @@
   flex: 1;
  }
  .ant-drawer-body{
-  padding: 0 15px !important;
+  padding: 15px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
  }
- .u-bt{
+ .u-btt{
   width: 100%;
   display: flex;
+  justify-content: space-around;
   &>Button{
+    height: 45px;
     flex: 1;
+  }
+  &>Button:first-child{
+      background: #1890ff;
+      color: #fff;
   }
  }
 

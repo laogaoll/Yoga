@@ -3,17 +3,9 @@ import'./index.less';
 import React from 'react';
 import { useState,useEffect,useRef } from "react";
 import Item from '../../components/Item';
-import axios from "axios";
 import Rr from '../../components/Rr';
-
-
-
-/*const Countna_money = (nm_money,p_limit) => {
-
-  let na_money =  ((nm_money / p_limit) * 1.5).toFixed(2) ;
-  return na_money;
-}*/
-
+//import { GetClassByIdApi,GetSignupByIdApi} from '@/services/api';
+let module = import ('@/services/api');
 const AppointInfo = (props) =>{
   const c_id = props.location.query.c_id;
   const [newArr ,setnewArr] = useState(
@@ -27,24 +19,36 @@ const AppointInfo = (props) =>{
       duration:0,
     }]
   );
+ /* const newArr = useRef([]);*/
   const [user, setUser] = useState([]);
-  useEffect(()=>{
-    axios.get('http://124.220.20.66:8000/api/user/course').then((response)=>{
-    const Arrr = response.data.filter((item,index)=>{
-            return item.c_id == c_id;
-    })  
-    setnewArr(Arrr);
+
+//详情页头部课程
+const GetClassById = async()=>{
+  (await module). GetClassByIdApi({params:{
+    c_id:c_id,
+  }}).then((res)=>{
+    if(res.status === 1)
+      setnewArr(res.data);
+  }).catch((err)=>console.log(err));
+};
+useEffect(()=>{
+  GetClassById();
+},[]);
+//预约人员
+const getSignupById = async()=>{
+  (await module). GetSignupByIdApi({
+    params:{
+      c_id:c_id,
+    }
+  }).then((res)=>{
+    if(res.status === 1)
+      setUser(res.data);
   })
-  },[]);
-  useEffect(()=>{
-    axios.get('http://124.220.20.66:8000/api/user/signumber',{
-      params:{
-        c_id:c_id,
-      }
-    }).then((response)=>{
-          setUser(response.data);
-    })
-  },[])
+}
+useEffect(()=>{
+  getSignupById();
+},[]);
+
   const returnBefore = () =>{
     history.go(-1);
   }
@@ -55,7 +59,7 @@ const AppointInfo = (props) =>{
         <div>  <h2>课程详情</h2></div>
        
         </div>
-      <Head data={newArr} flag={1}></Head>
+      <Head data={newArr}></Head>
         <Rr newArr={newArr}> users = {user.length}</Rr>
       <div className="g-body">
           <div className="m-hd">
@@ -67,12 +71,6 @@ const AppointInfo = (props) =>{
           <div className="m-bd">
             {
               user?.map((item,i)=>(
-                /*<div id='row'i={i} key={i}className={item.time.split(' ')[0] ===course[0].time.split(' ')[0]? "color":(blackList?"c":"")}>
-                    <div><span>{item.user_name}</span></div>
-                    <div><span>{item.time}</span></div>
-                    <div><span>{item.money}</span></div>
-                    <div><Switch defaultChecked = {0} onChange={(e)=>onChange(e,i)} /></div>
-                </div>*/
                   <Item key={i} name={item.u_name} time={item.appo_time}  l={user.length} newArr={newArr}
                    c_id={c_id} c_id2={item.c_id} u_id={item.u_id} s={0}></Item>
               ))

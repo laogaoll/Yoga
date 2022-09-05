@@ -3,7 +3,9 @@ import {ExclamationCircleOutlined} from '@ant-design/icons';
 import React ,{ useState } from "react";
 import moment from 'moment';
 import { useEffect } from 'react';
-import axios from 'axios';
+import { useRef } from 'react';
+let module = import('../../services/api');
+moment.suppressDeprecationWarnings = true;
 const{confirm} = Modal;
 const timeChange = (time)=>{
     let newtime = moment(time).utcOffset(8).format('YYYY-MM-DD HH:mm:ss');
@@ -21,15 +23,27 @@ const Item =(props)=>{
     const c_id = props.c_id;
     const c_id2 = props.c_id2;
     const [blackList,setblackList] = useState(false);
-    const [dis, setDis] = useState(true);
-    let end_time = moment(c_time).add(duration,'m').format("YYYY-MM-DD HH:mm:ss");
-    useEffect(()=>{
-        if(moment(end_time).isBefore(moment(),'s')){
-            setDis(false);
-         
+
+//是否在黑名单中
+const getBlacklist = async()=>{
+    (await module).GetBlacklistApi({
+        params:{
+            u_id:u_id,
+            c_id:c_id,
         }
-    },[]);
-    useEffect(()=>{
+    }).then((res)=>{
+        console.log(res.data);
+        if(res.data){
+            setblackList(!blackList);
+        }
+    }).catch((err)=>{
+        console.log(err);
+    })
+}
+useEffect(()=>{
+    getBlacklist();
+},[])
+    /*useEffect(()=>{
         axios.get('http://124.220.20.66:8000/api/user/blacklist').then((response)=>{
             response.data.forEach((item,i) => {
                 if(u_id == item.u_id && c_id == item.c_id){
@@ -37,7 +51,20 @@ const Item =(props)=>{
                 }
             });
         })
-      },[]);
+      },[]);*/
+//添加黑名单
+const addBlacklist = async()=>{
+    (await module).AddBlacklistApi({
+        u_id:u_id,
+        u_name:name,
+        c_id:c_id2,
+        time:moment().format("YYYY-MM-DD HH:mm:ss")
+    }).then((res)=>{
+        console.log(res);
+    }).catch((err)=>{
+        console.log(err);
+    })
+}
      const showConfirm = (checked) => {
         confirm({
             title:`确认将${name}加入黑名单吗?`,
@@ -46,13 +73,7 @@ const Item =(props)=>{
 
             onOk(){
                 setblackList(!blackList);
-                axios.post('http://124.220.20.66:8000/api/user/blacklist',{
-                    u_id:u_id,
-                    u_name:name,
-                    c_id:c_id2,
-                    time:moment().format("YYYY-MM-DD HH:mm:ss")
-
-                },{}).then((response)=>{console.log(response);})
+                addBlacklist();
             },
             onCancel(){
                 console.log('Cancel');
@@ -65,9 +86,7 @@ const Item =(props)=>{
             <div>{name}</div>
             <div>{time}</div>
             <div>{money}</div>
-            <div>
-            {s==1?<Switch disabled={true}></Switch>:<Switch disabled={dis||blackList} checked={blackList} onChange={showConfirm}></Switch>}
-            </div>
+            {s==1?null:<div><Switch disabled={blackList} checked={blackList} onChange={showConfirm}></Switch></div>}
         </div>
     );
 }

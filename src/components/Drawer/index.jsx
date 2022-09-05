@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import './index.less';
 import axios from 'axios';
+import {addCourseApi} from '@/services/api';
 const { Option } = Select;
 
 const format = 'HH:mm';
@@ -58,7 +59,8 @@ const addIcon2 = (
 const reduceIcon2 = (
   <div onClick={() => (changeNumber('p_limit', false, 1, 5, 12))}>-</div>)
 
-const addCourse = () =>{
+//添加课程
+const addCourse = async() =>{
   let c_id = moment().format('YYYYMMDDHHmmss')
   let c_name = form.getFieldValue('c_name');
   let time =date+" "+moment( form.getFieldValue('begin_time')).format("HH:mm:ss");
@@ -66,26 +68,21 @@ const addCourse = () =>{
   let nm_money = form.getFieldValue('nm_money');
   let duration = form.getFieldValue('time_step');
   let p_limit = form.getFieldValue('p_limit');
-  //let na_money = updateNa_money();
-  /*console.log(c_id);
-  console.log(c_name);
-  console.log(time);
-  console.log(place);
-  console.log(nm_money);
-  console.log(duration);
-  console.log(p_limit);
-  console.log(na_money);*/
-  axios.post('http://124.220.20.66:8000/api/user/addCourse',{
-      c_id:c_id,
-      c_name:c_name,
-      time:time,
-      place:place,
-      nm_money:nm_money,
-      duration:duration,
-      p_limit:p_limit,
-  },{}).then((response)=>{console.log(response); setIsAdd(true);setVisible(false);
+  await addCourseApi({
+    c_id:c_id,
+    c_name:c_name,
+    time:time,
+    place:place,
+    nm_money:nm_money,
+    duration:duration,
+    p_limit:p_limit,
+  }).then((res)=>{
+    console.log(res);
+    setIsAdd(true);
+    setVisible(false);
+  }).catch((err)=>{
+    console.log(err);
   })
- 
 }
   return (
     
@@ -174,22 +171,12 @@ const addCourse = () =>{
                    <InputNumber min={5} max={12} addonBefore={reduceIcon2} addonAfter={addIcon2}></InputNumber>
                 </Form.Item>
               </Col>
-              
-              <Col span={24} style={{margin:0}}>
-                  <Form.Item
-                    name=""
-                    rules={[{required:false}]}>
-                      <div className='u-bt'>
+        </Form>
+                  <div className='u-btt'>
                       <Button onClick={()=>addCourse()}>提交</Button>
                         <Button onClick={()=>onClose()}>取消</Button>
-                      </div>
+                 </div>
                         
-                    </Form.Item>
-              </Col>
-              
-              
-           
-        </Form>
       </Drawer>
       </div>
     </>

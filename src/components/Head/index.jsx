@@ -3,9 +3,10 @@ import yogaImg from '../../images/yoga.svg';
 import yumaoImg from '../../images/yumaoqiu.jpg';
 import weiqiImg from '../../images/weiqi.svg';
 import moment from 'moment';
-
+//去除RFC2822/ISO date formats的警告
+moment.suppressDeprecationWarnings = true;
 const timeChange = (time)=>{
-    let newtime = moment(time).utcOffset(8).format('YYYY-MM-DD HH:mm:ss');
+    let newtime = moment(time).format('YYYY-MM-DD HH:mm:ss');
     return newtime;
  }
 
@@ -14,32 +15,18 @@ const Head = (props)=>{
     const flag = props.flag;
     return(
         <div>{
-            flag === 0?
             (data?.map((item,i)=>(
-               moment( timeChange(item.time).split(' ')[0]).isSame(moment(),"day")?(
                 <div key={i} className={lessStyles.head}>
-                     <img src={yogaImg} alt="" />
+                     {item.c_name=="瑜伽"?<img src={yogaImg} alt="" />:(item.c_name=="围棋"?<img src={weiqiImg}/>:<img src={yumaoImg}/>)}
                      <div>
                         <span>{timeChange(item.time)}</span>
                         <span>{item.duration}分钟</span>
                         <span>{item.place}</span>
                      </div>
-                </div>):null
+                </div>)
                
 
-            ))):(data?.map((item,i)=>(
-               
-                 <div key={i} className={lessStyles.head}>
-                      <img src={yogaImg} alt="" />
-                      <div>
-                         <span>{timeChange(item.time)}</span>
-                         <span>{item.duration}分钟</span>
-                         <span>{item.place}</span>
-                      </div>
-                 </div>
-                
- 
-             )))
+            ))
              }
         </div>
     )
